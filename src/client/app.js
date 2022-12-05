@@ -242,8 +242,19 @@ function updateTodo(id) {
 
 // delete list
 clearBtn.onclick = () => {
-  todos = []; 
-  localStorage.setItem("TodoLocalStorage", JSON.stringify(todos)); 
+  let todoData = localStorage.getItem("TodoLocalStorage");
+  todos = JSON.parse(todoData)
+ 
+  todos.forEach((ele, index) => {
+    if (ele.completed === true){
+      todos.splice(index) 
+      localStorage.setItem("TodoLocalStorage", JSON.stringify(todos)); 
+     
+    }
+
+     
+  })
+
   renderTodos(); 
 };
 
