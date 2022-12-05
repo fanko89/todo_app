@@ -240,7 +240,7 @@ function updateTodo(id) {
   renderTodos()
 }
 
-// delete list
+// delete completed todo list
 clearBtn.onclick = () => {
   let todoData = localStorage.getItem("TodoLocalStorage");
   todos = JSON.parse(todoData)
@@ -249,7 +249,6 @@ clearBtn.onclick = () => {
     if (ele.completed === true){
       todos.splice(index) 
       localStorage.setItem("TodoLocalStorage", JSON.stringify(todos)); 
-     
     }
 
      
