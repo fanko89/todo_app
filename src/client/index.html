@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<html>
+  <head>
+    <title>todo</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="styles.css">
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+
+    <div class="wrapper">
+      <header>Todo List</header>
+        <div class="inputField">
+            <select id="selectCategory" class="dropdown">
+                <option selected>Select Category</option>
+                <option>School</option>
+            </select>
+
+        </div>
+        <div class="inputField">
+        <input type="text" class="addTodo"  placeholder="enter new task">
+        <button id="addItem"><i class="fas fa-plus"></i></button>
+      </div>
+      <div class="inputField">
+        <input type="text" class="newCategoryName"  placeholder="Add New Category">
+        <button class="addCategoryBtn"><i class="fas fa-plus"></i></button>
+      </div>
+
+      <div class="inputField">
+     <select id="filterCategory" class="dropdown">
+        <option selected>Filter By Category</option>
+      </select>
+      <button type="button" id="editCategoryButton" class="btn btn-success btn-sm">Edit</button>
+      </div>
+        <div id="editCategoryInput" hidden>
+            <input type="text" class="editCategoryName" placeholder="Edit Existing Category">
+            <button class="editCategoryConfirmButton"><i class="fas fa-plus"></i></button>
+            <button class="editCategoryDeleteButton"><i class="fas fa-minus"></i></button>
+        </div>
+      <div id="newCategorySection" class="row">
+        <div>
+      <div class="catList">
+
+      </div>
+      <ul class="todoUL">
+      </ul>
+      <div class="footer">
+        <span>You currently have <span class="tasksLeft"> tasks.</span>
+        <button>Clear</button>
+    </div>
+</div>
+
+
+    <!-- <script type="text/javascript" src="app.js"></script> -->
+    <script type="text/javascript" src="app.js"></script>
+</body>
+</html>
