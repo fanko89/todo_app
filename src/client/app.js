@@ -23,7 +23,7 @@ let todos =[
         category: "school",
     }
 ]
-localStorage.setItem("TodoLocalStorage", JSON.stringify(todos));
+// localStorage.setItem("TodoLocalStorage", JSON.stringify(todos));
 let categories = ["school"]
 let filterByCategory = undefined
 
