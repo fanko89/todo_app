@@ -1,30 +1,6 @@
 
-// What I'm still neededing to finish for this assignment:
-// 1. stop writing to local storage when the app starts (remove line 9)
-// 2. create local storage for categories - save categories whenever they are altered
-// 3. Load categories from local storage when you start the app
-
-// -- Milestone - all data is sync'd to local storage
-
-// 4. Build a backend server that can accept a list of todos
-// 5. Build a backend route that can provide a list of todos
-// 6. Build a backend route that can accept a list of strings (categories)
-// 7. Build a backend route that can provide a list of strings (categories)
-// 8. Replace all instances of saving to local storage or reading from local storage with instances of POSTing to backend or GETing from backend
-
-
-
-
-let todos =[
-    {
-        text: "Finish Homework",
-        completed: false,
-        editing: false,
-        category: "school",
-    }
-]
-// localStorage.setItem("TodoLocalStorage", JSON.stringify(todos));
-let categories = ["school"]
+let todos =[]
+let categories = []
 let filterByCategory = undefined
 
 // getting all required elements
@@ -65,7 +41,7 @@ editCategoryButton.onclick = () => {
 // delete a category
 editCategoryDeleteButton.onclick = () => {
   const categoryIndex = filterCategoryList.selectedIndex
-  const oldName = categories[categoryIndex-1]
+  const oldName = categories[categoryIndex-1].category
 
   // deleting existing todos
   todos = todos.filter((todo) => {
@@ -73,11 +49,11 @@ editCategoryDeleteButton.onclick = () => {
       return todo
     }
   })
-  localStorage.setItem("TodoLocalStorage", JSON.stringify(todos));
+  deleteCategoryOnServer(categoryIndex-1)
 
   // changing the value in the categories list
   categories = categories.filter((category) => {
-    if (category !== oldName) {
+    if (category.category !== oldName) {
       return category
     }
   })
@@ -103,21 +79,22 @@ editCategoryConfirmButton.onclick = () => {
     }
     return todo
   })
-  localStorage.setItem("TodoLocalStorage", JSON.stringify(todos));
+  updateCategoryOnServer(categoryIndex-1, newName)
 
   // changing the value in the categories list
-  const indexToReplace = categories.findIndex((element) => {return element === oldName})
-  categories[indexToReplace] = newName
+  const indexToReplace = categories.findIndex((element) => {return element.category === oldName})
+  categories[indexToReplace].category = newName
 
   // re-render everything
   renderTodos()
 }
 
 addCategoryBtn.onclick = () => {
-  categoryText = newCategoryName.value;
+  const categoryText = newCategoryName.value;
   if (categoryText === "") return;
-  if (categories.includes(categoryText)) return;
-  categories.push(categoryText)
+  if (categories.includes({category: categoryText})) return;
+  categories.push({category: categoryText})
+  addCategoryOnServer({category: categoryText})
   renderTodos()
   addCategoryBtn.classList.remove("active");
   newCategoryName.value = "";
@@ -125,7 +102,6 @@ addCategoryBtn.onclick = () => {
 
 addBtn.onclick = () => {
   let todoText = todoInput.value;
-  let todoData = localStorage.getItem("TodoLocalStorage");
 
   // determine category
   let categoryIndex = selectCategoryList.selectedIndex
@@ -133,17 +109,14 @@ addBtn.onclick = () => {
   if (categoryIndex !== 0) {
     category = selectCategoryList.value
   }
-  if (todoData == null) {
-    todos = []; 
-  } else {
-    todos = JSON.parse(todoData); 
-  }
 
   if (todoText === "") {
     console.error("no empty text allowed");
   } else {
     todos.push({text: todoText, completed: false, category});
-    localStorage.setItem("TodoLocalStorage", JSON.stringify(todos));
+    // update backend
+    addTodoOnServer({text: todoText, completed: false, category})
+
     renderTodos();
     addBtn.classList.remove("active");
   }
@@ -154,13 +127,6 @@ addBtn.onclick = () => {
 //rendering task
 function renderTodos(refreshCategories = true) {
   editCategoryInput.hidden = true
-  let todoData = localStorage.getItem("TodoLocalStorage");
-  console.table(todoData)
-  if (todoData == null) {
-    todos = [];
-  } else {
-    todos = JSON.parse(todoData);
-  }
   const pendingTasksNumb = document.querySelector(".tasksLeft");
   pendingTasksNumb.textContent = todos.length;
   if (todos.length > 0) {
@@ -193,7 +159,7 @@ function renderCategories() {
   filterByCategoryOption = `<option selected>Filter By Category</option>`
 
   categories.forEach((element, index) => {
-    newHTML += `<option>${element}</option>`
+    newHTML += `<option>${element.category}</option>`
   })
 
   if (categories.length === 0) {
@@ -208,17 +174,14 @@ function renderCategories() {
 
 function completeTodo(id) {
   todos[id].completed = !todos[id].completed
-  localStorage.setItem("TodoLocalStorage", JSON.stringify(todos));
   renderTodos()
 }
 
 // delete function
 function deleteTodo(index) {
-  let todoData = localStorage.getItem("TodoLocalStorage");
-  todos = JSON.parse(todoData);
   if (todos[index].completed) {
     todos.splice(index, 1);
-    localStorage.setItem("TodoLocalStorage", JSON.stringify(todos));
+    deleteTodoOnServer(index)
     renderTodos();
   }
 }
@@ -226,37 +189,124 @@ function deleteTodo(index) {
 // change UI to show edit around the todo
 function editTodo(id) {
   todos[id].editing = true
-  localStorage.setItem("TodoLocalStorage", JSON.stringify(todos));
   renderTodos()
 }
 
-// change UI to show edit around the todo
 function updateTodo(id) {
   const text = document.querySelector(".editTodo").value
   todos[id].editing = false
   todos[id].text = text
   todos[id].completed = false
-  localStorage.setItem("TodoLocalStorage", JSON.stringify(todos));
+  
+  updateTodoOnServer(id, {text: text, completed: false, category: todos[id].category})
   renderTodos()
 }
 
-// delete completed todo list
+// delete list
 clearBtn.onclick = () => {
-  let todoData = localStorage.getItem("TodoLocalStorage");
-  todos = JSON.parse(todoData)
- 
-  todos.forEach((ele, index) => {
-    if (ele.completed === true){
-      todos.splice(index) 
-      localStorage.setItem("TodoLocalStorage", JSON.stringify(todos)); 
-    }
-
-     
-  })
-
+  todos = []; 
+  clearAllOnServer();
   renderTodos(); 
 };
 
-// initial render
-renderTodos();
+const SERVER_URL = 'http://localhost:3000';
 
+// Function to retrieve all todos from the server
+async function getTodosFromServer() {
+  const response = await fetch(`${SERVER_URL}/todos`);
+  const data = await response.json();
+  todos = data;
+}
+
+// Function to add a new todo to the server
+async function addTodoOnServer(todo) {
+  const body = JSON.stringify(todo)
+  console.log(todo)
+  await fetch(`${SERVER_URL}/todos`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body,
+  });
+}
+
+// Function to update a todo on the server
+async function updateTodoOnServer(id, updatedTodo) {
+  const response = await fetch(`${SERVER_URL}/todos/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(updatedTodo),
+  });
+}
+
+// Function to delete a todo from the server
+async function deleteTodoOnServer(id) {
+  await fetch(`${SERVER_URL}/todos/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+// Function to clear all todos from the server
+async function clearAllOnServer() {
+  await fetch(`${SERVER_URL}/clear`, {
+    method: 'DELETE',
+  });
+}
+
+// Function to tally the number of todos on the server
+async function tallyFromServer() {
+  await fetch(`${SERVER_URL}/todos/count`);
+}
+
+// Function to get all categories from server
+async function getCategoriesFromServer(category) {
+  console.log(category)
+  const response = await fetch(`${SERVER_URL}/categories`, {
+    method: 'GET',
+  });
+  const data = await response.json();
+  categories = data;
+}
+
+// Function to add a new category to the server
+async function addCategoryOnServer(category) {
+  console.log(category)
+  await fetch(`${SERVER_URL}/categories`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(category),
+  });
+}
+
+// Function to update a category on the server
+async function updateCategoryOnServer(id, updatedCategory) {
+  await fetch(`${SERVER_URL}/categories/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(updatedCategory),
+  });
+}
+
+// Function to delete a category from the server
+async function deleteCategoryOnServer(id) {
+  await fetch(`${SERVER_URL}/categories/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+
+async function main() {
+  // app setup logic
+  await getTodosFromServer();
+  await getCategoriesFromServer()
+  renderTodos();
+}
+
+main();
