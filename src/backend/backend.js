@@ -9,8 +9,8 @@ app.use(cors());
 
 // Connect to MongoDB using mongoose
 mongoose.connect('mongodb+srv://Node_user:DGM071989@cluster0.0k0ybrw.mongodb.net/?retryWrites=true&w=majority', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
+  useNewUrlParser: true
+
 });
 
 const db = mongoose.connection;
