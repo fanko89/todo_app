@@ -35,67 +35,67 @@ const Todo = mongoose.model('Todo', todoSchema);
 const Category = mongoose.model('Category', categorySchema);
 
 // Returns all todo items
-app.get('/todos', (req, res) => {
-  Todo.find((err, todos) => {
+app.get('/todos' = async (req, res) => {
+  await Todo.find((err, todos) => {
     if (err) return console.error(err);
     res.json(todos);
   });
 });
 
 // Adds a new todo item
-app.post('/todos', (req, res) => {
+app.post('/todos' = async (req, res) => {
   const todo = new Todo(req.body);
-  todo.save((err, todo) => {
+  await todo.save((err, todo) => {
     if (err) return console.error(err);
     res.json(todo);
   });
 });
 
 // Updates a todo item
-app.put('/todos/:id', (req, res) => {
-  Todo.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, todo) => {
+app.put('/todos/:id' = async (req, res) => {
+  await Todo.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, todo) => {
     if (err) return console.error(err);
     res.json(todo);
   });
 });
 
 // Deletes a todo item
-app.delete('/todos/:id', (req, res) => {
-  Todo.findByIdAndDelete(req.params.id, (err, todo) => {
+app.delete('/todos/:id' = async (req, res) => {
+  await Todo.findByIdAndDelete(req.params.id, (err, todo) => {
     if (err) return console.error(err);
     res.json(todo);
   });
 });
 
 // Returns all categories
-app.get('/categories', (req, res) => {
-  Category.find((err, categories) => {
+app.get('/categories' = async (req, res) => {
+  await Category.find((err, categories) => {
     if (err) return console.error(err);
     res.json(categories);
   });
 });
 
 // Adds a new category
-app.post('/categories', (req, res) => {
+app.post('/categories' = async (req, res) => {
   const category = new Category(req.body);
-  category.save((err, category) => {
+  await category.save((err, category) => {
     if (err) return console.error(err);
     res.json(category);
   });
 });
 
 // Updates a category
-app.put('/categories/:id', (req, res) => {
-  Category.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, category) => {
+app.put('/categories/:id' = async (req, res) => {
+  await Category.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, category) => {
     if (err) return console.error(err);
     res.json(category);
   });
 });
 
 // Deletes a category and all todo items in that category
-app.delete('/categories/:id', (req, res) => {
+app.delete('/categories/:id' = async (req, res) => {
   // Delete the category
-  Category.findByIdAndDelete(req.params.id, (err, category) => {
+  await Category.findByIdAndDelete(req.params.id, (err, category) => {
     if (err) return console.error(err);
     // Delete all todo items in the deleted category
     Todo.deleteMany({ category: category.category }, (err) => {
@@ -106,9 +106,9 @@ app.delete('/categories/:id', (req, res) => {
 });
 
 // Clears all todo items and categories
-app.delete('/clear', (req, res) => {
+app.delete('/clear'= async (req, res) => {
   // Delete all todo items
-  Todo.deleteMany({}, (err) => {
+  await Todo.deleteMany({}, (err) => {
     if (err) return console.error(err);
     // Delete all categories
     Category.deleteMany({}, (err) => {
@@ -119,8 +119,8 @@ app.delete('/clear', (req, res) => {
 });
 
 // Returns the number of todo items
-app.get('/tally', (req, res) => {
-  Todo.countDocuments((err, count) => {
+app.get('/tally' = async (req, res) => {
+  await Todo.countDocuments((err, count) => {
     if (err) return console.error(err);
     res.json({ count });
   });
