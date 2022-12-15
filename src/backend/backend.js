@@ -25,7 +25,6 @@ const todoSchema = new mongoose.Schema({
   text: String,
   completed: Boolean,
   category: String,
-  date: Date
   
 });
 console.log (todoSchema)
