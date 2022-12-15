@@ -1,7 +1,6 @@
 
 let todos =[]
 let categories = []
-todo = ""
 let filterByCategory = undefined
 
 // getting all required elements

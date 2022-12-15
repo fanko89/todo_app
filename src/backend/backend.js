@@ -7,6 +7,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+
 // Connect to MongoDB using mongoose
 mongoose.connect('mongodb+srv://Node_user:DGM071989@cluster0.0k0ybrw.mongodb.net/?retryWrites=true&w=majority', {
   useNewUrlParser: true
@@ -21,12 +22,13 @@ db.once('open', function() {
 
 // Define mongoose schemas and models
 const todoSchema = new mongoose.Schema({
-  title: String,
-  description: String,
+  text: String,
+  completed: Boolean,
   category: String,
   date: Date
+  
 });
-
+console.log (todoSchema)
 const categorySchema = new mongoose.Schema({
   category: String
 });
