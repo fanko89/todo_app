@@ -38,7 +38,7 @@ const Category = mongoose.model('Category', categorySchema);
 app.get('/todos', (req, res) => {
   Todo.find((err, todos) => {
     if (err) return console.error(err);
-    res.json(todos);
+    res.jsonStringify(todos);
   });
 });
 
@@ -47,7 +47,7 @@ app.post('/todos', (req, res) => {
   const todo = new Todo(req.body);
   todo.save((err, todo) => {
     if (err) return console.error(err);
-    res.json(todo);
+    res.jsonStringify(todo);
   });
 });
 
@@ -55,7 +55,7 @@ app.post('/todos', (req, res) => {
 app.put('/todos/:id', (req, res) => {
   Todo.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, todo) => {
     if (err) return console.error(err);
-    res.json(todo);
+    res.jsonStringify(todo);
   });
 });
 
