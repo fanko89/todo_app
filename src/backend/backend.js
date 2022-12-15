@@ -1,10 +1,10 @@
-const assert = require('assert');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
 
+//const assert = require('assert');
 // const { ObjectID } = require('mongodb');
 // let objectId = new ObjectID();
 // // Verify that the hex string is 24 characters long
