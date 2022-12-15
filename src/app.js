@@ -113,18 +113,14 @@ addBtn.onclick = () => {
   if (todoText === "") {
     console.error("no empty text allowed");
   } else {
-    const todo = new Todo({
-      title: todoText,
-      completed: false,
-      category,
-      date: Date.now()
-    });
-    todo.save((err, todo) => {
-      if (err) return console.error(err);
-      console.log(`Todo item saved: ${todo}`);
-    });
-    todoInput.value = "";
+    todos.push({text: todoText, completed: false, category});
+    // update backend
+    addTodoOnServer({text: todoText, completed: false, category})
+
+    renderTodos();
+    addBtn.classList.remove("active");
   }
+  todoInput.value = "";
 };
 
 
