@@ -4,11 +4,11 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
-const { ObjectID } = require('mongodb');
 
-let objectId = new ObjectID();
-// Verify that the hex string is 24 characters long
-assert.equal(24, objectId.toHexString().length);
+// const { ObjectID } = require('mongodb');
+// let objectId = new ObjectID();
+// // Verify that the hex string is 24 characters long
+// assert.equal(24, objectId.toHexString().length);
 
 
 
