@@ -209,7 +209,7 @@ clearBtn.onclick = () => {
   renderTodos(); 
 };
 
-//require('dotenv').config();
+require('dotenv').config();
 const SERVER_URL = 'http://localhost:3000';
 
 // Function to retrieve all todos from the server
