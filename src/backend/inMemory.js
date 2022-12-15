@@ -122,6 +122,19 @@ app.use(bodyParser.json());
 app.use(cors());
 const todos = [];
 const categories = [];
+
+// Connect to MongoDB using mongoose
+//require('dotenv').config();
+//const uri = 'mongodb+srv://Node_user:DGM071989@cluster0.0k0ybrw.mongodb.net/?retryWrites=true&w=majority'
+// const uri = process.env.MONGO_URL
+// mongoose.connect(
+//   uri,
+// { 
+
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true
+// });
+
 // Connect to MongoDB using mongoose
 mongoose.connect('mongodb+srv://Node_user:DGM071989@cluster0.0k0ybrw.mongodb.net/?retryWrites=true&w=majority', {
   useNewUrlParser: true,

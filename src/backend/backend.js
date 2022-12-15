@@ -4,18 +4,10 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
 
-//const assert = require('assert');
-// const { ObjectID } = require('mongodb');
-// let objectId = new ObjectID();
-// // Verify that the hex string is 24 characters long
-// assert.equal(24, objectId.toHexString().length);
-
-
-
 app.use(bodyParser.json());
 app.use(cors());
-
-// Connect to MongoDB using mongoose
+const todos = [];
+const categories = [];
 
 // Connect to MongoDB using mongoose
 //require('dotenv').config();
@@ -29,6 +21,7 @@ app.use(cors());
 //   useUnifiedTopology: true
 // });
 
+// Connect to MongoDB using mongoose
 mongoose.connect('mongodb+srv://Node_user:DGM071989@cluster0.0k0ybrw.mongodb.net/?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -43,10 +36,7 @@ db.once('open', function() {
 // Define mongoose schemas and models
 const todoSchema = new mongoose.Schema({
   text: String,
-  completed: {
-    type:Boolean,
-  default: false
-  },
+  completed: Boolean,
   category: String,
   date: Date
 });
