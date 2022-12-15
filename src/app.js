@@ -102,6 +102,7 @@ addCategoryBtn.onclick = () => {
 
 addBtn.onclick = () => {
   let todoText = todoInput.value;
+  console.log(todos)
 
   // determine category
   let categoryIndex = selectCategoryList.selectedIndex
@@ -310,4 +311,4 @@ async function main() {
 }
 
 main();
-console.log(todos)
+
