@@ -1,6 +1,7 @@
 
 let todos =[]
 let categories = []
+todo = ""
 let filterByCategory = undefined
 
 // getting all required elements
@@ -102,7 +103,6 @@ addCategoryBtn.onclick = () => {
 
 addBtn.onclick = () => {
   let todoText = todoInput.value;
-  console.log(todos)
 
   // determine category
   let categoryIndex = selectCategoryList.selectedIndex
