@@ -310,3 +310,4 @@ async function main() {
 }
 
 main();
+console.log(todos)
