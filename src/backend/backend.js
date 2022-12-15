@@ -1,12 +1,23 @@
+
+
+const assert = require('assert');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
+const { ObjectID } = require('mongodb');
+
+let objectId = new ObjectID();
+// Verify that the hex string is 24 characters long
+assert.equal(24, objectId.toHexString().length);
+
+
 
 app.use(bodyParser.json());
 app.use(cors());
-
+const todos = [];
+const categories = [];
 // Connect to MongoDB using mongoose
 mongoose.connect('mongodb+srv://Node_user:DGM071989@cluster0.0k0ybrw.mongodb.net/?retryWrites=true&w=majority', {
   useNewUrlParser: true,
@@ -22,7 +33,10 @@ db.once('open', function() {
 // Define mongoose schemas and models
 const todoSchema = new mongoose.Schema({
   text: String,
-  completed: Boolean,
+  completed: {
+    type:Boolean,
+  default: false
+  },
   category: String,
   date: Date
 });
@@ -38,16 +52,16 @@ const Category = mongoose.model('Category', categorySchema);
 app.get('/todos', (req, res) => {
   Todo.find((err, todos) => {
     if (err) return console.error(err);
-    res.jsonStringify(todos);
+    res.json(todos);
   });
 });
 
 // Adds a new todo item
 app.post('/todos', (req, res) => {
-  const todo = new Todo(req.body);
+  const todo = req.body;
   todo.save((err, todo) => {
     if (err) return console.error(err);
-    res.jsonStringify(todo);
+    res.json(todo);
   });
 });
 
@@ -55,7 +69,7 @@ app.post('/todos', (req, res) => {
 app.put('/todos/:id', (req, res) => {
   Todo.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, todo) => {
     if (err) return console.error(err);
-    res.jsonStringify(todo);
+    res.json(todo);
   });
 });
 
