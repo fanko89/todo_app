@@ -1,3 +1,4 @@
 Select category and enter task or enter task and add new category
 fiter categories with dropdown menu and it will apply to todos
 click edit next to filter category to edit categories names (a text field will appear where you can delete categories or save edit)
+data will be saved on mongodb server
