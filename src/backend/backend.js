@@ -6,8 +6,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(cors());
-const todos = [];
-const categories = [];
+
 
 // Connect to MongoDB using mongoose
 //require('dotenv').config();
